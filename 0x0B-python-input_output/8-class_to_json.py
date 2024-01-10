@@ -22,4 +22,3 @@ def class_to_json(obj):
 
 if __name__ == "__main__":
     pass
-
