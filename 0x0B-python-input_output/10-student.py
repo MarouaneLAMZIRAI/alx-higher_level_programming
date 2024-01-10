@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Module that contains a class Student that defines a student
-with public instance attributes and public methods.
+with public instance attributes and a public method.
 """
 
 
@@ -38,16 +38,6 @@ class Student:
         if attrs is None:
             return self.__dict__
         return {key: getattr(self, key) for key in attrs if hasattr(self, key)}
-
-    def reload_from_json(self, json):
-        """
-        Replaces all attributes of the Student instance.
-
-        Args:
-            json (dict): A dictionary with attribute names and values.
-        """
-        for key, value in json.items():
-            setattr(self, key, value)
 
 
 if __name__ == "__main__":

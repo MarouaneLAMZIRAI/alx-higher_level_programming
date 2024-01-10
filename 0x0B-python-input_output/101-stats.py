@@ -1,30 +1,41 @@
 #!/usr/bin/python3
+"""
+Script that reads stdin line by line and computes metrics.
+"""
+
 import sys
-import io
 
-#input = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
-#with open(input, "r", encoding="utf-8") as file:
- #   for line in file:
-  #      print(line)
+def print_stats(total_size, status_codes):
+    """
+    Prints the statistics.
 
-#input = io.TextIOWrapper(sys.stdin , encoding='utf-8')
+    Args:
+        total_size (int): Total file size.
+        status_codes (dict): Dictionary with status codes and their counts.
+    """
+    print("File size: {:d}".format(total_size))
+    for key in sorted(status_codes.keys()):
+        print("{:s}: {:d}".format(key, status_codes[key]))
 
-dictstatus = {}
-totalsize = 0
-totalcount = 0
-for line in sys.stdin:
-    split = line.split()
-    status = split[-2]
-    totalsize += int(split[-1])
-    if status in dictstatus.keys():
-        dictstatus[status] += 1
-    else:
-        dictstatus[status] = 1
-    totalcount += 1
-    if totalcount == 10:
-        sortme = sorted(dictstatus.keys())
-        print("File size:", totalsize)
-        for keys in sortme:
-            print("{}: {}".format(keys, dictstatus[keys]))
-        totalcount = 0
-        continue
+if __name__ == "__main__":
+    try:
+        total_size = 0
+        status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
+                        "403": 0, "404": 0, "405": 0, "500": 0}
+        count = 0
+
+        for line in sys.stdin:
+            count += 1
+            tokens = line.split()
+            if len(tokens) > 1 and tokens[-2].isdigit():
+                total_size += int(tokens[-2])
+            if len(tokens) > 2 and tokens[-2] in status_codes:
+                status_codes[tokens[-2]] += 1
+
+            if count % 10 == 0:
+                print_stats(total_size, status_codes)
+
+    except KeyboardInterrupt:
+        print_stats(total_size, status_codes)
+        raise
+
